@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { TrueSheet } from '@lodev09/react-native-true-sheet';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -74,10 +74,10 @@ const DetailsSheet = () => {
   }, [navigation]);
 
   return (
-    <View style={[styles.sheetContent, { paddingBottom: FOOTER_HEIGHT + SPACING }]}>
+    <ScrollView style={[styles.sheetContent, { paddingBottom: FOOTER_HEIGHT + SPACING }]} keyboardDismissMode='on-drag'>
       <Text style={styles.sheetTitle}>Details Sheet</Text>
       <Text style={styles.sheetSubtitle}>This is a sheet screen using react-navigation.</Text>
-      <DemoContent />
+      <TextInput placeholder="Type something..." style={styles.input} />
       <View style={styles.buttons}>
         <Button text="Resize to 100%" onPress={() => navigation.resize(1)} />
         <Button text="Open Settings" onPress={() => navigation.navigate('Settings')} />
@@ -89,7 +89,7 @@ const DetailsSheet = () => {
           <Text style={styles.sheetSubtitle}>Presented from footer button!</Text>
         </View>
       </TrueSheet>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -172,7 +172,7 @@ export const SheetNavigator = () => {
         name="Settings"
         component={SettingsSheet}
         options={{
-          detents: ['auto', 1],
+          detents: ['auto'],
           backgroundColor: DARK,
           cornerRadius: 16,
           reanimated: true,
@@ -224,5 +224,13 @@ const styles = StyleSheet.create({
   buttons: {
     gap: GAP,
     marginTop: SPACING,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    paddingHorizontal: 8,
   },
 });

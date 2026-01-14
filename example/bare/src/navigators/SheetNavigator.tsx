@@ -78,11 +78,14 @@ const DetailsSheet = () => {
       <Text style={styles.sheetTitle}>Details Sheet</Text>
       <Text style={styles.sheetSubtitle}>This is a sheet screen using react-navigation.</Text>
       <TextInput placeholder="Type something..." style={styles.input} />
+      <View style={{ height: 200, backgroundColor: 'blue', padding: SPACING }} />
       <View style={styles.buttons}>
         <Button text="Resize to 100%" onPress={() => navigation.resize(1)} />
         <Button text="Open Settings" onPress={() => navigation.navigate('Settings')} />
         <Button text="Go Back" onPress={() => navigation.goBack()} />
       </View>
+      <View style={{ height: 150, backgroundColor: 'blue', padding: SPACING }} />
+      <TextInput placeholder="Type something..." style={styles.input} />
       <TrueSheet ref={sheetRef} cornerRadius={12} detents={['auto']} backgroundColor={DARK}>
         <View style={styles.sheetContent}>
           <Text style={styles.sheetTitle}>Footer Sheet</Text>

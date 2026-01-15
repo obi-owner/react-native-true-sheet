@@ -7,6 +7,7 @@ import { Input } from '../Input';
 import { Button } from '../Button';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 interface PromptSheetProps extends TrueSheetProps {}
 
@@ -44,6 +45,7 @@ export const PromptSheet = forwardRef((props: PromptSheetProps, ref: Ref<TrueShe
       style={styles.content}
       backgroundBlur="dark"
       backgroundColor={DARK}
+      scrollable
       onDidDismiss={handleDismiss}
       onDidPresent={(e) => {
         console.log(
@@ -66,11 +68,16 @@ export const PromptSheet = forwardRef((props: PromptSheetProps, ref: Ref<TrueShe
       header={<Header />}
       {...props}
     >
-      <Input ref={input1Ref} placeholder="Full name" />
-      <Input ref={input2Ref} placeholder="Email" keyboardType="email-address" />
-      <Input ref={textAreaRef} placeholder="Message..." multiline />
-      <Button text="Submit" onPress={handleSubmitPress} />
-      <Button text="Dismiss" onPress={handleDismissPress} />
+      <KeyboardAwareScrollView contentContainerStyle={styles.content}>
+        <Input ref={input1Ref} placeholder="Full name" />
+        <Input ref={input2Ref} placeholder="Email" keyboardType="email-address" />
+        <Input ref={textAreaRef} placeholder="Message..." multiline />
+        <Button text="Submit" onPress={handleSubmitPress} />
+        <Button text="Dismiss" onPress={handleDismissPress} />
+        <Input ref={textAreaRef} placeholder="Message..." multiline />
+        <Input placeholder="Message..." multiline />
+        <Input placeholder="Message..." multiline />
+      </KeyboardAwareScrollView>
     </TrueSheet>
   );
 });

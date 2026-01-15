@@ -3473,6 +3473,7 @@ __metadata:
     react-native: "npm:0.82.1"
     react-native-builder-bob: "npm:^0.40.15"
     react-native-gesture-handler: "npm:^2.29.1"
+    react-native-keyboard-controller: "npm:^1.20.5"
     react-native-maps: "npm:^1.26.20"
     react-native-monorepo-config: "npm:^0.1.9"
     react-native-reanimated: "npm:^4.2.0"
@@ -3506,6 +3507,7 @@ __metadata:
     react-dom: "npm:19.1.0"
     react-native: "npm:0.81.5"
     react-native-gesture-handler: "npm:~2.28.0"
+    react-native-keyboard-controller: "npm:^1.20.5"
     react-native-maps: "npm:^1.26.20"
     react-native-monorepo-config: "npm:^0.1.9"
     react-native-reanimated: "npm:^4.2.0"
@@ -3524,6 +3526,7 @@ __metadata:
   dependencies:
     "@types/react": "npm:19.1.1"
     react-native-gesture-handler: "npm:^2.29.1"
+    react-native-keyboard-controller: "npm:^1.20.5"
     react-native-maps: "npm:^1.26.20"
     react-native-reanimated: "npm:^4.2.0"
     react-native-safe-area-context: "npm:~5.6.0"
@@ -3534,6 +3537,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
+    react-native-keyboard-controller: "*"
     react-native-maps: "*"
     react-native-reanimated: "*"
     react-native-safe-area-context: "*"
@@ -19450,6 +19454,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/87d20b900aded7d44c90afb946a7aa03c23a94ca3dd547bdddc2303b85357e4aab22567a57b19f1558d6c8be7058e3dcf34faa1e15182d1604f90974266d9a1d
+  languageName: node
+  linkType: hard
+
+"react-native-keyboard-controller@npm:^1.20.5":
+  version: 1.20.5
+  resolution: "react-native-keyboard-controller@npm:1.20.5"
+  dependencies:
+    react-native-is-edge-to-edge: "npm:^1.2.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-reanimated: ">=3.0.0"
+  checksum: 10c0/3aa80a9af9b1f6d330f79f56e64e282815b24471f0a294ffe1ff6ba8dbb6c5b1066d660f24300491ab610e23c13722910391ded65245f56411341f5262d1a115
   languageName: node
   linkType: hard
 

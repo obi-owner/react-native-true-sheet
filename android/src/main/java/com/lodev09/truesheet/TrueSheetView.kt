@@ -612,6 +612,11 @@ class TrueSheetView(private val reactContext: ThemedReactContext) :
     viewController.positionFooter()
   }
 
+  override fun containerViewScrollContentDidChangeSize(height: Int) {
+    // Scroll content changed (items added/removed), reconfigure sheet
+    updateSheetIfNeeded()
+  }
+
   // ==================== RNScreensEventObserverDelegate ====================
 
   override fun presenterScreenWillDisappear() {

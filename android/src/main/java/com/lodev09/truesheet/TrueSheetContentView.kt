@@ -24,6 +24,7 @@ interface TrueSheetContentViewDelegate {
   fun contentViewDidChangeSize(width: Int, height: Int)
   fun contentViewDidScroll()
   fun contentViewScrollViewDidChange()
+  fun scrollContentDidChangeSize(height: Int)
 }
 
 /**
@@ -41,6 +42,8 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
   private var originalScrollViewPaddingBottom: Int = 0
   private var bottomInset: Int = 0
   private var scrollExpansionPadding: Int = 0
+  private var lastScrollContentHeight: Int = 0
+  private var scrollContentLayoutListener: View.OnLayoutChangeListener? = null
 
   private var keyboardScrollOffset: Float = 0f
   private var keyboardObserver: TrueSheetKeyboardObserver? = null
@@ -108,6 +111,8 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
           delegate?.contentViewDidScroll()
         }
       }
+
+      setupScrollContentListener(scrollView)
     }
 
     this.bottomInset = bottomInset
@@ -145,7 +150,32 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
     )
   }
 
+  private fun setupScrollContentListener(scrollView: ViewGroup?) {
+    val scrollContent = scrollView?.getChildAt(0) ?: return
+
+    lastScrollContentHeight = scrollContent.height
+
+    scrollContentLayoutListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+      val newHeight = scrollContent.height
+      if (newHeight != lastScrollContentHeight && newHeight > 0) {
+        lastScrollContentHeight = newHeight
+        delegate?.scrollContentDidChangeSize(newHeight)
+      }
+    }
+    scrollContent.addOnLayoutChangeListener(scrollContentLayoutListener)
+  }
+
+  private fun removeScrollContentListener() {
+    val scrollContent = pinnedScrollView?.getChildAt(0)
+    scrollContentLayoutListener?.let { listener ->
+      scrollContent?.removeOnLayoutChangeListener(listener)
+    }
+    scrollContentLayoutListener = null
+    lastScrollContentHeight = 0
+  }
+
   fun clearScrollable() {
+    removeScrollContentListener()
     pinnedScrollView?.setOnScrollChangeListener(null as View.OnScrollChangeListener?)
     pinnedScrollView?.isNestedScrollingEnabled = false
     (pinnedScrollView?.parent as? SwipeRefreshLayout)?.isNestedScrollingEnabled = true

@@ -3,7 +3,6 @@ package com.lodev09.truesheet
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Build
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +85,6 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
   TrueSheetBottomSheetViewDelegate {
 
   companion object {
-    private const val TAG = "TrueSheetVC"
     private const val DEFAULT_MAX_WIDTH = 640 // dp
     private const val DEFAULT_CORNER_RADIUS = 16 // dp
     private const val DEFAULT_ANCHOR_OFFSET = 16 // dp
@@ -246,22 +244,14 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
 
   override val contentHeight: Int
     get() {
-      val container = containerView ?: run {
-        Log.d(TAG, "[contentHeight] containerView is null, returning cachedContentHeight=$cachedContentHeight")
-        return cachedContentHeight
-      }
-
-      Log.d(TAG, "[contentHeight] scrollable=$scrollable, hasAutoDetent=$hasAutoDetent, container.contentHeight=${container.contentHeight}")
+      val container = containerView ?: return cachedContentHeight
 
       // When scrollable and auto detent is used, get natural height to avoid
       // the circular dependency where flex children expand to fill constraints
       if (scrollable && hasAutoDetent) {
-        val natural = container.getNaturalContentHeight(screenHeight)
-        Log.d(TAG, "[contentHeight] using natural height=$natural (scrollable + auto)")
-        return natural
+        return container.getNaturalContentHeight()
       }
 
-      Log.d(TAG, "[contentHeight] returning container.contentHeight=${container.contentHeight}")
       return container.contentHeight
     }
 
@@ -816,13 +806,9 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
     }
 
     containerView?.let {
-      Log.d(TAG, "[setupSheetDetents] containerView.contentHeight=${it.contentHeight}, headerHeight=${it.headerHeight}")
       cachedContentHeight = it.contentHeight
       cachedHeaderHeight = it.headerHeight
     }
-
-    Log.d(TAG, "[setupSheetDetents] contentHeight (via property)=$contentHeight, headerHeight=$headerHeight")
-    Log.d(TAG, "[setupSheetDetents] screenHeight=$screenHeight, realScreenHeight=$realScreenHeight, topInset=$topInset")
 
     interactionState = InteractionState.Reconfiguring
 
@@ -831,28 +817,20 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
     val maxAvailableHeight = realScreenHeight - topInset
 
     val firstDetentHeight = detentCalculator.getDetentHeight(detents[0])
-    Log.d(TAG, "[setupSheetDetents] firstDetentHeight=$firstDetentHeight (detent=${detents[0]})")
     val peekHeight = minOf(firstDetentHeight, maxAvailableHeight)
 
     val halfExpandedDetentHeight = when (detents.size) {
       1 -> peekHeight
-      else -> {
-        val h = detentCalculator.getDetentHeight(detents[1])
-        Log.d(TAG, "[setupSheetDetents] secondDetentHeight=$h (detent=${detents[1]})")
-        h
-      }
+      else -> detentCalculator.getDetentHeight(detents[1])
     }
 
     val lastDetentHeight = detentCalculator.getDetentHeight(detents.last())
-    Log.d(TAG, "[setupSheetDetents] lastDetentHeight=$lastDetentHeight (detent=${detents.last()})")
     val maxDetentHeight = minOf(lastDetentHeight, maxAvailableHeight)
 
     val adjustedHalfExpandedHeight = minOf(halfExpandedDetentHeight, maxAvailableHeight)
     val halfExpandedRatio = (adjustedHalfExpandedHeight.toFloat() / realScreenHeight.toFloat())
 
     val expandedOffset = realScreenHeight - maxDetentHeight
-
-    Log.d(TAG, "[setupSheetDetents] peekHeight=$peekHeight, halfExpandedRatio=$halfExpandedRatio, expandedOffset=$expandedOffset")
 
     // fitToContents works better with <= 2 detents when no expanded offset
     val fitToContents = detents.size < 3 && expandedOffset == 0
@@ -865,8 +843,6 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
       fitToContents = fitToContents,
       animate = isPresented
     )
-
-    Log.d(TAG, "========== [setupSheetDetents] END ==========")
 
     updateStateDimensions(expandedOffset)
 

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.facebook.react.uimanager.PixelUtil.dpToPx
 import com.facebook.react.uimanager.ThemedReactContext
@@ -16,6 +17,17 @@ import com.lodev09.truesheet.utils.smoothScrollBy
 import com.lodev09.truesheet.utils.smoothScrollTo
 
 data class ScrollableOptions(val keyboardScrollOffset: Float = 0f, val scrollingExpandsSheet: Boolean = true)
+
+/**
+ * Wrapper for scrollable view info (either ScrollView or RecyclerView)
+ */
+data class ScrollableViewInfo(
+  val view: View,
+  val containerHeight: Int,
+  val contentHeight: Int,
+  val paddingTop: Int,
+  val paddingBottom: Int
+)
 
 /**
  * Delegate interface for content view size changes
@@ -43,6 +55,7 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
   private var bottomInset: Int = 0
   private var scrollExpansionPadding: Int = 0
   private var lastScrollContentHeight: Int = 0
+  private var lastScrollChildrenHeight: Int = 0
   private var scrollContentLayoutListener: View.OnLayoutChangeListener? = null
 
   private var keyboardScrollOffset: Float = 0f
@@ -151,18 +164,33 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
   }
 
   private fun setupScrollContentListener(scrollView: ViewGroup?) {
-    val scrollContent = scrollView?.getChildAt(0) ?: return
+    val scrollContent = scrollView?.getChildAt(0) as? ViewGroup ?: return
 
     lastScrollContentHeight = scrollContent.height
+    lastScrollChildrenHeight = getMaxChildBottom(scrollContent)
 
     scrollContentLayoutListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
       val newHeight = scrollContent.height
-      if (newHeight != lastScrollContentHeight && newHeight > 0) {
+      val newChildrenHeight = getMaxChildBottom(scrollContent)
+
+      val heightChanged = newHeight != lastScrollContentHeight && newHeight > 0
+      val childrenChanged = newChildrenHeight != lastScrollChildrenHeight && newChildrenHeight > 0
+
+      if (heightChanged || childrenChanged) {
         lastScrollContentHeight = newHeight
+        lastScrollChildrenHeight = newChildrenHeight
         delegate?.scrollContentDidChangeSize(newHeight)
       }
     }
     scrollContent.addOnLayoutChangeListener(scrollContentLayoutListener)
+  }
+
+  private fun getMaxChildBottom(container: ViewGroup): Int {
+    var maxBottom = 0
+    for (i in 0 until container.childCount) {
+      maxBottom = maxOf(maxBottom, container.getChildAt(i).bottom)
+    }
+    return maxBottom
   }
 
   private fun removeScrollContentListener() {
@@ -172,6 +200,7 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
     }
     scrollContentLayoutListener = null
     lastScrollContentHeight = 0
+    lastScrollChildrenHeight = 0
   }
 
   fun clearScrollable() {
@@ -205,6 +234,82 @@ class TrueSheetContentView(private val reactContext: ThemedReactContext) : React
       }
     }
 
+    return null
+  }
+
+  /**
+   * Finds any scrollable view (ScrollView or RecyclerView) and returns its info.
+   * RecyclerView is used by FlatList/FlashList in React Native.
+   */
+  fun findScrollableViewInfo(): ScrollableViewInfo? = findScrollableView(this)
+
+  /**
+   * Get the height of non-scrollable content above the scrollable view.
+   * Calculates the Y offset by walking up the view hierarchy.
+   */
+  fun getNonScrollableContentHeight(scrollableView: View): Int {
+    var offset = 0
+    var currentView: View? = scrollableView
+    while (currentView != null && currentView != this) {
+      offset += currentView.top
+      currentView = currentView.parent as? View
+    }
+    return offset
+  }
+
+  private fun findScrollableView(view: View): ScrollableViewInfo? {
+    when (view) {
+      is ScrollView -> {
+        val contentContainer = view.getChildAt(0) as? ViewGroup
+        var contentHeight = contentContainer?.height ?: 0
+
+        // For virtualized lists (FlatList), content fills container exactly
+        // Use max child bottom position to get actual content height
+        if (contentContainer != null && contentHeight == view.height && contentContainer.childCount > 0) {
+          val maxBottom = getMaxChildBottom(contentContainer)
+          if (maxBottom > 0) {
+            contentHeight = maxOf(contentHeight, maxBottom)
+          }
+        }
+
+        return ScrollableViewInfo(
+          view = view,
+          containerHeight = view.height,
+          contentHeight = contentHeight,
+          paddingTop = view.paddingTop,
+          paddingBottom = view.paddingBottom
+        )
+      }
+      is RecyclerView -> {
+        val scrollRange = view.computeVerticalScrollRange()
+        val layoutManager = view.layoutManager
+
+        // For small lists that fit on screen, sum visible children heights
+        val actualContentHeight = if (scrollRange <= view.height && layoutManager != null) {
+          var totalHeight = 0
+          for (i in 0 until view.childCount) {
+            totalHeight += view.getChildAt(i).height
+          }
+          totalHeight
+        } else {
+          scrollRange - view.paddingTop - view.paddingBottom
+        }
+
+        return ScrollableViewInfo(
+          view = view,
+          containerHeight = view.height,
+          contentHeight = actualContentHeight,
+          paddingTop = view.paddingTop,
+          paddingBottom = view.paddingBottom
+        )
+      }
+      is ViewGroup -> {
+        for (i in 0 until view.childCount) {
+          val info = findScrollableView(view.getChildAt(i))
+          if (info != null) return info
+        }
+      }
+    }
     return null
   }
 

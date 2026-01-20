@@ -1,10 +1,10 @@
-import { forwardRef, useState } from 'react';
-import { StyleSheet, ScrollView, View, Text, Switch, Platform } from 'react-native';
 import { TrueSheet, type TrueSheetProps } from '@lodev09/react-native-true-sheet';
+import { forwardRef, useState } from 'react';
+import { FlatList, Platform, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BORDER_RADIUS, DARK, DARK_GRAY, GAP, LIGHT_GRAY, SPACING, times } from '../../utils';
-import { Header } from '../Header';
 import { DemoContent } from '../DemoContent';
+import { Header } from '../Header';
 import { Spacer } from '../Spacer';
 
 interface AutoScrollableSheetProps extends TrueSheetProps {
@@ -56,25 +56,22 @@ export const AutoScrollableSheet = forwardRef<TrueSheet, AutoScrollableSheetProp
         onDidPresent={() => console.log('AutoScrollableSheet presented!')}
         {...props}
       >
-        <ScrollView
-          nestedScrollEnabled
-          contentContainerStyle={styles.content}
-          indicatorStyle="black"
-        >
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Test Configuration</Text>
-            <Text style={styles.infoText}>Detents: {useAutoDetent ? "['auto', 1]" : '[0.5, 1]'}</Text>
-            <Text style={styles.infoText}>Scrollable: {scrollableEnabled ? 'true' : 'false'}</Text>
-            <Text style={styles.infoText}>Item Count: {count}</Text>
-          </View>
-          <Spacer />
-          {times(count, (i) => (
-            <View key={i}>
-              <DemoContent color={DARK_GRAY} text={`Item #${i + 1}`} />
-              {i < count - 1 && <Spacer />}
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+            data={times(count, (i) => i)}
+            contentContainerStyle={{
+              paddingBottom: SPACING,
+              paddingTop: SPACING,
+              backgroundColor: 'blue',
+            }}
+            style={{
+              // padding: SPACING * 2,
+              backgroundColor: 'green',
+            }}
+            renderItem={({ item }) => (
+              <DemoContent color={DARK_GRAY} text={`Item #${item}`} />
+            )}
+            ItemSeparatorComponent={Spacer}
+          />
       </TrueSheet>
     );
   }
@@ -84,8 +81,9 @@ AutoScrollableSheet.displayName = 'AutoScrollableSheet';
 
 const styles = StyleSheet.create({
   content: {
-    padding: SPACING,
-    paddingBottom: SPACING * 2,
+    // padding: SPACING,
+    // paddingBottom: 0,
+    backgroundColor: 'red',
   },
   controls: {
     gap: GAP / 2,

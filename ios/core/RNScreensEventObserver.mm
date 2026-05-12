@@ -60,8 +60,10 @@ using namespace facebook::react;
         return false;
       }
 
-      if (auto family = event.shadowNodeFamily.lock()) {
-        Tag screenTag = family->getTag();
+      // Use eventTarget instead of shadowNodeFamily for RN 0.79 compatibility:
+      // RawEvent::shadowNodeFamily was added in RN 0.81+.
+      if (event.eventTarget) {
+        Tag screenTag = event.eventTarget->getTag();
         if (![strongSelf->_screenTags containsObject:@(screenTag)]) {
           return false;
         }

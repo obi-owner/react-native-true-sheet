@@ -1,6 +1,5 @@
 const path = require('path');
 const { getDefaultConfig } = require('expo/metro-config');
-const { withMetroConfig } = require('react-native-monorepo-config');
 
 const root = path.resolve(__dirname, '../..');
 const pkg = require('../../package.json');
@@ -9,26 +8,31 @@ const pkg = require('../../package.json');
  * Metro configuration
  * https://docs.expo.dev/guides/customizing-metro
  *
- * @type {import('metro-config').MetroConfig}
+ * @type {Promise<import('metro-config').MetroConfig>}
  */
-const baseConfig = withMetroConfig(getDefaultConfig(__dirname), {
-  root,
-  dirname: __dirname,
-});
+module.exports = (async () => {
+  // react-native-monorepo-config is ESM-only; import dynamically from CJS.
+  const { withMetroConfig } = await import('react-native-monorepo-config');
 
-// Extend resolver to handle subpath exports with source condition
-const originalResolveRequest = baseConfig.resolver.resolveRequest;
+  const baseConfig = withMetroConfig(getDefaultConfig(__dirname), {
+    root,
+    dirname: __dirname,
+  });
 
-baseConfig.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Handle subpath exports for the main package (e.g., @lodev09/react-native-true-sheet/reanimated)
-  if (moduleName.startsWith(pkg.name + '/')) {
-    context = {
-      ...context,
-      unstable_conditionNames: ['source', ...context.unstable_conditionNames],
-    };
-  }
+  // Extend resolver to handle subpath exports with source condition
+  const originalResolveRequest = baseConfig.resolver.resolveRequest;
 
-  return originalResolveRequest(context, moduleName, platform);
-};
+  baseConfig.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle subpath exports for the main package (e.g., @lodev09/react-native-true-sheet/reanimated)
+    if (moduleName.startsWith(pkg.name + '/')) {
+      context = {
+        ...context,
+        unstable_conditionNames: ['source', ...context.unstable_conditionNames],
+      };
+    }
 
-module.exports = baseConfig;
+    return originalResolveRequest(context, moduleName, platform);
+  };
+
+  return baseConfig;
+})();

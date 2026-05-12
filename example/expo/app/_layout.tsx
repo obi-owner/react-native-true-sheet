@@ -50,34 +50,38 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-  return (
-    <MapProvider apiKey={GOOGLE_MAPS_API_KEY}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <TrueSheetProvider>
-          <Stack
-            screenOptions={{
-              headerTintColor: 'white',
-              headerStyle: { backgroundColor: DARK_BLUE },
+  const stack = (
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <TrueSheetProvider>
+        <Stack
+          screenOptions={{
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: DARK_BLUE },
+          }}
+        >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="standard" options={{ headerShown: false, title: 'Standard' }} />
+          <Stack.Screen name="test" options={{ title: 'Test' }} />
+          <Stack.Screen
+            name="modal"
+            options={{
+              presentation: 'fullScreenModal',
+              headerShown: false,
             }}
-          >
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="standard" options={{ headerShown: false, title: 'Standard' }} />
-            <Stack.Screen name="test" options={{ title: 'Test' }} />
-            <Stack.Screen
-              name="modal"
-              options={{
-                presentation: 'fullScreenModal',
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="sheet"
-              options={{ presentation: 'fullScreenModal', headerShown: false }}
-            />
-            <Stack.Screen name="test-stack" options={{ headerShown: false }} />
-          </Stack>
-        </TrueSheetProvider>
-      </ThemeProvider>
-    </MapProvider>
+          />
+          <Stack.Screen
+            name="sheet"
+            options={{ presentation: 'fullScreenModal', headerShown: false }}
+          />
+          <Stack.Screen name="test-stack" options={{ headerShown: false }} />
+        </Stack>
+      </TrueSheetProvider>
+    </ThemeProvider>
+  );
+
+  return GOOGLE_MAPS_API_KEY ? (
+    <MapProvider apiKey={GOOGLE_MAPS_API_KEY}>{stack}</MapProvider>
+  ) : (
+    stack
   );
 }

@@ -57,21 +57,19 @@ export const AutoScrollableSheet = forwardRef<TrueSheet, AutoScrollableSheetProp
         {...props}
       >
         <FlatList
-            data={times(count, (i) => i)}
-            contentContainerStyle={{
-              paddingBottom: SPACING,
-              paddingTop: SPACING,
-              backgroundColor: 'blue',
-            }}
-            style={{
-              // padding: SPACING * 2,
-              backgroundColor: 'green',
-            }}
-            renderItem={({ item }) => (
-              <DemoContent color={DARK_GRAY} text={`Item #${item}`} />
-            )}
-            ItemSeparatorComponent={Spacer}
-          />
+          data={times(count, (i) => i)}
+          contentContainerStyle={{
+            paddingBottom: SPACING,
+            paddingTop: SPACING,
+            backgroundColor: 'blue',
+          }}
+          style={{
+            // padding: SPACING * 2,
+            backgroundColor: 'green',
+          }}
+          renderItem={({ item }) => <DemoContent color={DARK_GRAY} text={`Item #${item}`} />}
+          ItemSeparatorComponent={Spacer}
+        />
       </TrueSheet>
     );
   }

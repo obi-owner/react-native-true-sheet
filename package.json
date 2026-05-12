@@ -3,32 +3,31 @@
   "version": "3.10.1",
   "description": "The true native bottom sheet experience for your React Native Apps.",
   "source": "./src/index.ts",
-  "main": "./lib/module/index.js",
-  "types": "./lib/typescript/src/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "types": "./lib/typescript/src/index.d.ts",
-      "default": "./lib/module/index.js"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     },
-    "./mock": "./lib/module/mocks/index.js",
-    "./navigation/mock": "./lib/module/mocks/navigation.js",
-    "./reanimated/mock": "./lib/module/mocks/reanimated.js",
+    "./mock": "./src/mocks/index.ts",
+    "./navigation/mock": "./src/mocks/navigation.ts",
+    "./reanimated/mock": "./src/mocks/reanimated.ts",
     "./reanimated": {
       "source": "./src/reanimated/index.ts",
-      "types": "./lib/typescript/src/reanimated/index.d.ts",
-      "default": "./lib/module/reanimated/index.js"
+      "types": "./src/reanimated/index.ts",
+      "default": "./src/reanimated/index.ts"
     },
     "./navigation": {
       "source": "./src/navigation/index.ts",
-      "types": "./lib/typescript/src/navigation/index.d.ts",
-      "default": "./lib/module/navigation/index.js"
+      "types": "./src/navigation/index.ts",
+      "default": "./src/navigation/index.ts"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "src",
-    "lib",
     "android",
     "ios",
     "common",

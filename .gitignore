@@ -90,3 +90,6 @@ coverage
 
 # Agents
 .claude
+
+# Patch distribution
+dist/

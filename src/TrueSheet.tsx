@@ -524,7 +524,9 @@ export class TrueSheet extends PureComponent<TrueSheetProps, TrueSheetState> {
       >
         {this.state.shouldRenderNativeView && (
           <TrueSheetContainerViewNativeComponent
-            style={scrollable ? styles.scrollableContainer : undefined}
+            style={
+              scrollable ? Platform.select({ android: styles.scrollableContainer }) : undefined
+            }
           >
             {header && (
               <TrueSheetHeaderViewNativeComponent style={[styles.header, headerStyle]}>
@@ -532,7 +534,9 @@ export class TrueSheet extends PureComponent<TrueSheetProps, TrueSheetState> {
               </TrueSheetHeaderViewNativeComponent>
             )}
             <TrueSheetContentViewNativeComponent
-              style={scrollable ? [style, styles.scrollableContent] : style}
+              style={
+                scrollable ? [style, Platform.select({ android: styles.scrollableContent })] : style
+              }
             >
               {children}
             </TrueSheetContentViewNativeComponent>

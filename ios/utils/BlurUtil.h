@@ -9,13 +9,12 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 
 #import <UIKit/UIKit.h>
-#import <react/renderer/components/TrueSheetSpec/Props.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BlurUtil : NSObject
 
-+ (UIBlurEffectStyle)blurEffectStyleFromEnum:(facebook::react::TrueSheetViewBackgroundBlur)blur;
++ (UIBlurEffectStyle)blurEffectStyleFromString:(NSString *)tintString;
 
 @end
 

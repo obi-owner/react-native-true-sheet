@@ -211,32 +211,32 @@ using namespace facebook::react;
 
   if (@available(iOS 26.0, *)) {
     UIScrollView *scrollView = _pinnedScrollView.scrollView;
-    auto topEffect = options ? options.topScrollEdgeEffect : TrueSheetViewTopScrollEdgeEffect::Hidden;
-    auto bottomEffect = options ? options.bottomScrollEdgeEffect : TrueSheetViewBottomScrollEdgeEffect::Hidden;
+    NSInteger topEffect = options ? options.topScrollEdgeEffect : (NSInteger)TrueSheetViewTopScrollEdgeEffect::Hidden;
+    NSInteger bottomEffect =
+      options ? options.bottomScrollEdgeEffect : (NSInteger)TrueSheetViewBottomScrollEdgeEffect::Hidden;
 
     [self applyEdgeEffect:topEffect toEdge:scrollView.topEdgeEffect];
-    [self applyEdgeEffect:(TrueSheetViewTopScrollEdgeEffect)bottomEffect toEdge:scrollView.bottomEdgeEffect];
+    [self applyEdgeEffect:bottomEffect toEdge:scrollView.bottomEdgeEffect];
   }
 #endif
 }
 
 #if RNTS_IPHONE_OS_VERSION_AVAILABLE(26_0)
-- (void)applyEdgeEffect:(TrueSheetViewTopScrollEdgeEffect)effect
-                 toEdge:(UIScrollEdgeEffect *)edgeEffect API_AVAILABLE(ios(26.0)) {
+- (void)applyEdgeEffect:(NSInteger)effect toEdge:(UIScrollEdgeEffect *)edgeEffect API_AVAILABLE(ios(26.0)) {
   switch (effect) {
-    case TrueSheetViewTopScrollEdgeEffect::Automatic:
+    case (NSInteger)TrueSheetViewTopScrollEdgeEffect::Automatic:
       edgeEffect.hidden = NO;
       edgeEffect.style = UIScrollEdgeEffectStyle.automaticStyle;
       break;
-    case TrueSheetViewTopScrollEdgeEffect::Hard:
+    case (NSInteger)TrueSheetViewTopScrollEdgeEffect::Hard:
       edgeEffect.hidden = NO;
       edgeEffect.style = UIScrollEdgeEffectStyle.hardStyle;
       break;
-    case TrueSheetViewTopScrollEdgeEffect::Soft:
+    case (NSInteger)TrueSheetViewTopScrollEdgeEffect::Soft:
       edgeEffect.hidden = NO;
       edgeEffect.style = UIScrollEdgeEffectStyle.softStyle;
       break;
-    case TrueSheetViewTopScrollEdgeEffect::Hidden:
+    case (NSInteger)TrueSheetViewTopScrollEdgeEffect::Hidden:
       edgeEffect.hidden = YES;
       break;
   }

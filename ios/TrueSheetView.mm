@@ -51,7 +51,7 @@ using namespace facebook::react;
   UIView *_snapshotView;
   CGSize _lastStateSize;
   NSInteger _initialDetentIndex;
-  TrueSheetViewInsetAdjustment _insetAdjustment;
+  NSString *_insetAdjustment;
   BOOL _scrollable;
   ScrollableOptions *_scrollableOptions;
   BOOL _initialDetentAnimated;
@@ -185,7 +185,7 @@ using namespace facebook::react;
   _controller.backgroundColor = RCTUIColorFromSharedColor(newProps.backgroundColor);
 
   // Blur tint
-  _controller.backgroundBlur = newProps.backgroundBlur;
+  _controller.backgroundBlur = !newProps.backgroundBlur.empty() ? RCTNSStringFromString(newProps.backgroundBlur) : nil;
 
   // Blur options
   const auto &blurOpts = newProps.blurOptions;
@@ -202,7 +202,7 @@ using namespace facebook::react;
   _controller.maxContentWidth = newProps.maxContentWidth != 0.0 ? @(newProps.maxContentWidth) : nil;
 
   // Anchor
-  _controller.anchor = newProps.anchor;
+  _controller.anchor = RCTNSStringFromString(newProps.anchor);
 
   _controller.grabber = newProps.grabber;
 
@@ -245,11 +245,11 @@ using namespace facebook::react;
 
   const auto &scrollableOpts = newProps.scrollableOptions;
   BOOL scrollingExpandsSheet = scrollableOpts.scrollingExpandsSheet;
-  auto topEdgeEffect = scrollableOpts.topScrollEdgeEffect;
-  auto bottomEdgeEffect = scrollableOpts.bottomScrollEdgeEffect;
+  NSInteger topEdgeEffect = (NSInteger)scrollableOpts.topScrollEdgeEffect;
+  NSInteger bottomEdgeEffect = (NSInteger)scrollableOpts.bottomScrollEdgeEffect;
   BOOL hasScrollableOptions = scrollableOpts.keyboardScrollOffset > 0 || !scrollingExpandsSheet ||
-                              topEdgeEffect != TrueSheetViewTopScrollEdgeEffect::Hidden ||
-                              bottomEdgeEffect != TrueSheetViewBottomScrollEdgeEffect::Hidden;
+                              topEdgeEffect != (NSInteger)TrueSheetViewTopScrollEdgeEffect::Hidden ||
+                              bottomEdgeEffect != (NSInteger)TrueSheetViewBottomScrollEdgeEffect::Hidden;
 
   if (hasScrollableOptions) {
     ScrollableOptions *options = [[ScrollableOptions alloc] init];
@@ -264,7 +264,7 @@ using namespace facebook::react;
 
   _controller.scrollingExpandsSheet = scrollingExpandsSheet;
 
-  _insetAdjustment = newProps.insetAdjustment;
+  _insetAdjustment = RCTNSStringFromString(toString(newProps.insetAdjustment));
   _controller.insetAdjustment = _insetAdjustment;
 
   [self setupScrollable];

@@ -28,7 +28,6 @@
 
 ### 💡 Others
 
-- **iOS**: Use codegen enum types instead of `NSInteger` casts for better type safety. ([#612](https://github.com/lodev09/react-native-true-sheet/pull/612) by [@lodev09](https://github.com/lodev09))
 - Add docs versioning with automated release script. ([#586](https://github.com/lodev09/react-native-true-sheet/pull/586) by [@lodev09](https://github.com/lodev09))
 - Add missing `layout` and `screenLayout` props to `TrueSheetNavigator`. ([#615](https://github.com/lodev09/react-native-true-sheet/pull/615) by [@bram-dc](https://github.com/bram-dc))
 - Add `truesheet-usage` AI skill and documentation for AI coding agents. ([#621](https://github.com/lodev09/react-native-true-sheet/pull/621) by [@mehradotdev](https://github.com/mehradotdev))
@@ -138,8 +137,8 @@
 ### 💡 Others
 
 - Performance improvements across JS, iOS, and Android. ([#521](https://github.com/lodev09/react-native-true-sheet/pull/521) by [@lodev09](https://github.com/lodev09))
-- Use codegen enums for `backgroundBlur`, `anchor`, and `insetAdjustment` props. ([#499](https://github.com/lodev09/react-native-true-sheet/pull/499) by [@lodev09](https://github.com/lodev09))
 - Replace `react-native-maps` with `@lugg/maps` in examples. ([#503](https://github.com/lodev09/react-native-true-sheet/pull/503) by [@lodev09](https://github.com/lodev09))
+
 
 ## 3.8.2
 

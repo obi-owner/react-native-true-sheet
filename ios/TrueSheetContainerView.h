@@ -10,7 +10,6 @@
 
 #import <React/RCTViewComponentView.h>
 #import <UIKit/UIKit.h>
-#import <react/renderer/components/TrueSheetSpec/Props.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,8 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat keyboardScrollOffset;
 @property (nonatomic, assign) BOOL scrollingExpandsSheet;
-@property (nonatomic, assign) facebook::react::TrueSheetViewTopScrollEdgeEffect topScrollEdgeEffect;
-@property (nonatomic, assign) facebook::react::TrueSheetViewBottomScrollEdgeEffect bottomScrollEdgeEffect;
+@property (nonatomic, assign) NSInteger topScrollEdgeEffect;
+@property (nonatomic, assign) NSInteger bottomScrollEdgeEffect;
 
 @end
 
@@ -49,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Inset adjustment mode for scrollable content
  */
-@property (nonatomic, assign) facebook::react::TrueSheetViewInsetAdjustment insetAdjustment;
+@property (nonatomic, copy, nullable) NSString *insetAdjustment;
 
 /**
  * Options for scrollable behavior

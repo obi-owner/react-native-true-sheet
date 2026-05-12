@@ -75,34 +75,6 @@ interface TrueSheetViewControllerDelegate {
  * enabling touch pass-through to underlying views. Handles detent configuration, drag interactions,
  * keyboard avoidance, dimmed backgrounds, back button, and lifecycle events for stacked sheets.
  */
-enum class TrueSheetAnchor {
-  LEFT,
-  CENTER,
-  RIGHT;
-
-  companion object {
-    fun fromString(value: String?): TrueSheetAnchor =
-      when (value) {
-        "left" -> LEFT
-        "right" -> RIGHT
-        else -> CENTER
-      }
-  }
-}
-
-enum class TrueSheetInsetAdjustment {
-  AUTOMATIC,
-  NEVER;
-
-  companion object {
-    fun fromString(value: String?): TrueSheetInsetAdjustment =
-      when (value) {
-        "never" -> NEVER
-        else -> AUTOMATIC
-      }
-  }
-}
-
 @SuppressLint("ClickableViewAccessibility", "ViewConstructor")
 class TrueSheetViewController(private val reactContext: ThemedReactContext) :
   ReactViewGroup(reactContext),
@@ -193,7 +165,7 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
   // Detent Configuration
   override var maxContentHeight: Int? = null
   override var maxContentWidth: Int? = null
-  override var anchor: TrueSheetAnchor = TrueSheetAnchor.CENTER
+  override var anchor: String? = null
   override var anchorOffset: Int = DEFAULT_ANCHOR_OFFSET.dpToPx().toInt()
   override var detents: MutableList<Double> = mutableListOf(0.5, 1.0)
 
@@ -203,7 +175,7 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
   override var grabber: Boolean = true
   override var grabberOptions: GrabberOptions? = null
   override var sheetBackgroundColor: Int? = null
-  var insetAdjustment: TrueSheetInsetAdjustment = TrueSheetInsetAdjustment.AUTOMATIC
+  var insetAdjustment: String = "automatic"
 
   var scrollable: Boolean = false
 
@@ -296,7 +268,7 @@ class TrueSheetViewController(private val reactContext: ThemedReactContext) :
     get() = if (edgeToEdgeEnabled) ScreenUtils.getInsets(reactContext).top else 0
 
   override val contentBottomInset: Int
-    get() = if (insetAdjustment == TrueSheetInsetAdjustment.AUTOMATIC) bottomInset else 0
+    get() = if (insetAdjustment == "automatic") bottomInset else 0
 
   @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
   private val edgeToEdgeEnabled: Boolean

@@ -59,33 +59,9 @@ export interface NativeProps extends ViewProps {
   dimmedDetentIndex?: WithDefault<Int32, 0>;
 
   // String properties - use empty string as default to avoid nil insertion
-  backgroundBlur?: WithDefault<
-    | 'none'
-    | 'light'
-    | 'dark'
-    | 'default'
-    | 'extra-light'
-    | 'regular'
-    | 'prominent'
-    | 'system-ultra-thin-material'
-    | 'system-thin-material'
-    | 'system-material'
-    | 'system-thick-material'
-    | 'system-chrome-material'
-    | 'system-ultra-thin-material-light'
-    | 'system-thin-material-light'
-    | 'system-material-light'
-    | 'system-thick-material-light'
-    | 'system-chrome-material-light'
-    | 'system-ultra-thin-material-dark'
-    | 'system-thin-material-dark'
-    | 'system-material-dark'
-    | 'system-thick-material-dark'
-    | 'system-chrome-material-dark',
-    'none'
-  >;
+  backgroundBlur?: WithDefault<string, ''>;
 
-  anchor?: WithDefault<'left' | 'center' | 'right', 'center'>;
+  anchor?: WithDefault<string, 'center'>;
   anchorOffset?: WithDefault<Double, 16>;
   insetAdjustment?: WithDefault<'automatic' | 'never', 'automatic'>;
 

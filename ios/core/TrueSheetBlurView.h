@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <react/renderer/components/TrueSheetSpec/Props.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TrueSheetBlurView : UIVisualEffectView
 
-@property (nonatomic, assign) facebook::react::TrueSheetViewBackgroundBlur backgroundBlur;
+@property (nonatomic, copy, nullable) NSString *backgroundBlur;
 @property (nonatomic, strong, nullable) NSNumber *blurIntensity;
 @property (nonatomic, assign) BOOL blurInteraction;
 
